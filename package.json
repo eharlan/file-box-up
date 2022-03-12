@@ -1,0 +1,29 @@
+{
+  "name": "printer-api",
+  "version": "0.0.1",
+  "description": "Local network printing API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eharlan/printer-api.git"
+  },
+  "author": "Erik Harlan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eharlan/printer-api/issues"
+  },
+  "homepage": "https://github.com/eharlan/printer-api#readme",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "form-data": "^4.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4"
+  }
+}
