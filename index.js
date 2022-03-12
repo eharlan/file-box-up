@@ -1,5 +1,7 @@
 const fs = require('fs');
 const express = require('express');
+const bodyParser = require('body-parser')
+const multer = require('multer');
 const morgan = require('morgan');
 
 const UPLOAD_PATH = 'uploads/';
@@ -14,13 +16,8 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
-app.post('/photos/upload', upload.array('photos'), function (req, res, next) {
-  // req.files is array of `photos` files
-  // req.body will contain the text fields, if there were any
-})
-
 app.post(`/${UPLOAD_PATH.replace('/','')}`, upload.array('files'), (req, res) => {
-    console.log('Got body:', req.body);
+    console.log('Got body:', req.body, req.files);
     res.sendStatus(200);
 });
 
