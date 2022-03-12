@@ -1,4 +1,5 @@
 const fs = require('fs');
+const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser')
 const multer = require('multer');
@@ -10,14 +11,16 @@ const upload = multer({ dest: UPLOAD_PATH })
 const app = express();
 const port = 3000;
 
+
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Printer API')
 });
 
 app.post(`/${UPLOAD_PATH.replace('/','')}`, upload.array('files'), (req, res) => {
-    console.log('Got body:', req.body, req.files);
+    console.log('Got body:', req.body, 'files:', req.files);
     res.sendStatus(200);
 });
 
