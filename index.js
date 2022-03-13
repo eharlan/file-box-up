@@ -13,7 +13,10 @@ const port = 5000;
 
 
 app.use(cors());
+app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('tiny'));
+
 
 app.get('/', (req, res) => {
   res.send('Printer API')

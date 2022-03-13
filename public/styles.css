@@ -1,0 +1,15 @@
+.header{
+    margin:0 auto;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width:100%;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;   
+}
