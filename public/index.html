@@ -7,11 +7,15 @@
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
     <body>
-      <h2 class="header">Upload Files to Print</h2>
-      <form onsubmit="formSubmit(event);">
-      <input id="fileUpload" type="file" multiple />
-      <button type="submit">Print Now</button>
-    </form> 
+      <div class="d-flex justify-content-center m-3">
+        <div class="flex-column">
+        <h2 class="mb-4 text-center">Upload Files to Print</h2>
+        <form class="flex-column d-flex gap-4" onsubmit="formSubmit(event);">
+        <input class="form-control" id="fileUpload" type="file" multiple />
+        <button class="btn btn-outline-primary p-2" type="submit">Print Now</button>
+      </form> 
+      </div>
+      </div>
     </body>
     <script src="index.js"></script>
 </html>
