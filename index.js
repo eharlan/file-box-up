@@ -11,7 +11,6 @@ const upload = multer({ dest: UPLOAD_PATH })
 const app = express();
 const port = 5000;
 
-
 app.use(cors());
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }));

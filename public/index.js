@@ -1,7 +1,8 @@
-
 const input = document.getElementById('fileUpload')
+let selectedFiles = null;
+
 input.onchange = function(event) {
-    const selectedFiles = event.target.files;
+    selectedFiles = event.target.files;
     
     for (const file of selectedFiles) {
         console.log(file.name, file.size)
@@ -11,5 +12,8 @@ input.onchange = function(event) {
 
 function formSubmit(event){
     event.preventDefault();
-    console.log('Form submitted!')
+    axios.post('/uploads',{
+        files:selectedFiles
+    })
+
 }
