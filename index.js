@@ -8,7 +8,7 @@ const morgan = require('morgan');
 const UPLOAD_PATH = 'uploads/';
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads')
+    cb(null, `./${UPLOAD_PATH}`)
   },
   filename: function (req, file, cb) {
     var filename = file.originalname;
@@ -34,15 +34,15 @@ app.get('/', (req, res) => {
 });
 
 app.post(`/${UPLOAD_PATH.replace('/','')}`, upload.array('files', 100), (req, res) => {
-    console.log('Got body:', req.body, 'files:', req.files);
-    res.send(req.files);
+  console.log('Got body:', req.body, 'files:', req.files);
+  res.send(req.files);
 }, (error, req, res, next) => {
-	res.status(400).send({error: error.message})
+  res.status(400).send({error: error.message})
 });
 
 app.listen(port, () => {
-    if(!fs.existsSync(UPLOAD_PATH)){
-      fs.mkdirSync(UPLOAD_PATH)  
-    }
+  if(!fs.existsSync(UPLOAD_PATH)){
+    fs.mkdirSync(UPLOAD_PATH)  
+  }
   console.log(`Printer API listening on port ${port}\nUPLOAD_PATH: ${UPLOAD_PATH}`)
 })
