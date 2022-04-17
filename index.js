@@ -4,6 +4,29 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const multer = require('multer');
 const morgan = require('morgan');
+const path = require('path')
+
+const walkSync = (dir, filelist = []) => {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const dirFile = path.join(dir, file);
+    const dirent = fs.statSync(dirFile);
+    if (dirent.isDirectory()) {
+      console.log('directory', path.join(dir, file));
+      var odir = {
+        dir: dirFile,
+        files: []
+      }
+      odir.files = walkSync(dirFile, dir.files);
+      filelist.push(odir);
+    } else {
+      filelist.push({
+        file: dirFile
+      });
+    }
+  }
+  return filelist;
+}
 
 const UPLOAD_PATH = 'uploads/';
 const storage = multer.diskStorage({
@@ -13,7 +36,8 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     var filename = file.originalname;
     var fileExtension = filename.split(".")[1];
-    cb(null, filename+'_'+new Date().toISOString());
+
+    return cb(null, filename);
   }
 });
 
@@ -33,9 +57,25 @@ app.get('/', (req, res) => {
   res.send('Printer API')
 });
 
+app.get('/files', (req, res) => {
+  const dirTree = walkSync(__dirname+'/uploads/');
+  
+  if(dirTree.length){
+    return res.send(JSON.stringify(walkSync(__dirname+'/uploads/')))
+  }
+  
+  res.status(204).send({})
+
+});
+
+app.get('/download', function(req, res){
+  const file = `${__dirname}/uploads/${req.query.file}`;
+  res.download(file);
+});
+
 app.post(`/${UPLOAD_PATH.replace('/','')}`, upload.array('files', 100), (req, res) => {
-  console.log('Got body:', req.body, 'files:', req.files);
-  res.send(req.files);
+//  morgan.log('Got body:', req.body, 'files:', req.files);
+  res.send(req.files, 200);
 }, (error, req, res, next) => {
   res.status(400).send({error: error.message})
 });

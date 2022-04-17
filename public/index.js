@@ -1,10 +1,20 @@
 const input = document.getElementById('fileUpload')
+const copyBtn = document.getElementById('copyBtn')
 
 const bar = document.querySelector('.progress');
 const barProgress = document.querySelector('.progress-bar');
 const alertBox = document.querySelector('.alert-success');
 
 let selectedFiles = null;
+let clip = '';
+
+copyBtn.onclick = (event) => {
+	event.preventDefault();
+
+  if (clip){
+	  prompt('Uploaded Files:',clip);	
+	}
+}
 
 input.onchange = function(event) {
 	selectedFiles = event.target.files;
@@ -20,6 +30,7 @@ input.onchange = function(event) {
 
 }
 
+
 function formSubmit(event){
 	event.preventDefault();
 
@@ -30,10 +41,16 @@ function formSubmit(event){
 
 	bar.classList.toggle('d-none')
 
+
+  clip = '';
+
 	const bodyFormData = new FormData();
 	for(const file of selectedFiles){
-		bodyFormData.append('files', file); 	
+		bodyFormData.append('files', file);
+		clip += `${window.location.origin}/download?file=${file.name}', `
 	}
+
+	clip = clip.slice(0, -3);
 
 	axios({
 		method: 'post',
@@ -51,7 +68,8 @@ function formSubmit(event){
 			console.log('success!: '+response);
 			alertBox.classList.toggle('show');
 			alertBox.classList.toggle('d-none');
-		})
+		  input.value = '';
+    })
 		.catch(function(error){
 			console.log('Upload error: '+error)
 		})
