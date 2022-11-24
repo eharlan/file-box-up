@@ -1,5 +1,7 @@
 const input = document.getElementById('fileUpload')
 const copyBtn = document.getElementById('copyBtn')
+const printBtn = document.getElementById('print-tab')
+const printFiles = document.getElementById('print')
 
 const bar = document.querySelector('.progress');
 const barProgress = document.querySelector('.progress-bar');
@@ -7,6 +9,38 @@ const alertBox = document.querySelector('.alert-success');
 
 let selectedFiles = null;
 let clip = '';
+ 
+
+printBtn.onclick = (event) => {
+	event.preventDefault();
+
+	axios({
+		method: 'get',
+		url: '/files',
+	})
+		.then(function(response){
+			if(!response.data){
+				return false;
+			}
+
+			let files = '<div><ol id="list">';
+
+			Object.entries(response.data).forEach(element => {
+				const name = String(element[1].file).split('/').pop();
+				files += `<a href="#"><li data-path="${encodeURIComponent(element[1].file)}">${name}</li></a>`
+			})
+
+			files += '</ol></div>'
+			console.log(files)
+			printFiles.innerHTML = files;
+
+			console.log('success!: '+JSON.stringify(response.data));
+
+    })
+		.catch(function(error){
+			console.log('File list error: '+error)
+		})
+}
 
 copyBtn.onclick = (event) => {
 	event.preventDefault();

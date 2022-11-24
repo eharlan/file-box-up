@@ -69,7 +69,8 @@ app.get('/files', (req, res) => {
 });
 
 app.get('/download', function(req, res){
-  const file = `${__dirname}/uploads/${req.query.file}`;
+  let file = `${__dirname}/uploads/${req.query.file}`;
+
   res.download(file);
 });
 
