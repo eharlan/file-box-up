@@ -12,7 +12,6 @@ const walkSync = (dir, filelist = []) => {
     const dirFile = path.join(dir, file);
     const dirent = fs.statSync(dirFile);
     if (dirent.isDirectory()) {
-      console.log('directory', path.join(dir, file));
       var odir = {
         dir: dirFile,
         files: []
@@ -52,6 +51,9 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 
+const isEncoded = (str) => {
+    return typeof str == "string" && decodeURIComponent(str) !== str;
+}
 
 app.get('/', (req, res) => {
   res.send('Printer API')
@@ -69,7 +71,12 @@ app.get('/files', (req, res) => {
 });
 
 app.get('/download', function(req, res){
-  let file = `${__dirname}/uploads/${req.query.file}`;
+  const reqFile = req.query.file;
+  let file = `${__dirname}/uploads/${reqFile}`;
+  
+  if(isEncoded(reqFile)){
+    file = file.replace(reqFile, decodeURIComponent(reqFile));
+  }
 
   res.download(file);
 });

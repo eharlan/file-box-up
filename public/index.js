@@ -27,14 +27,11 @@ printBtn.onclick = (event) => {
 
 			Object.entries(response.data).forEach(element => {
 				const name = String(element[1].file).split('/').pop();
-				files += `<a href="#"><li data-path="${encodeURIComponent(element[1].file)}">${name}</li></a>`
+				files += `<li><div class="container-fluid"><div class="row"><div class="col-2"><a href="/download?file=${encodeURIComponent(name)}">${name}</a></div><div class="col-1"><button class="btn btn-sm btn-outline-secondary" type="button"><i class="bi bi-printer"></i></button></div><div class="col-1"><button class="btn btn-sm btn-outline-warning"><i class="bi bi-printer"></i></button></div></div></div></li>`
 			})
 
 			files += '</ol></div>'
-			console.log(files)
 			printFiles.innerHTML = files;
-
-			console.log('success!: '+JSON.stringify(response.data));
 
     })
 		.catch(function(error){
