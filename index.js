@@ -47,7 +47,7 @@ const port = 5000;
 
 app.use(cors());
 app.options('*', cors());
-app.use(express.static('public'))
+app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 
