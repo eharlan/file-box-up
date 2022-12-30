@@ -23,11 +23,11 @@ printBtn.onclick = (event) => {
         return false;
       }
 
-      let files = '<div><ol id="list">';
+      let files = '<div><ol id="file-list">';
 
       Object.entries(response.data).forEach(element => {
-        const name = String(element[1].file).split('/').pop();
-		  files += `<li class="my-1"><div class="container-fluid"><div class="row"><div class="col-1"><a href="/download?file=${encodeURIComponent(name)}">${name}</a></div><div class="col-1"><button class="btn btn-sm btn-outline-warning mx-2" type="button"><i class="bi bi-pencil"></i></button><button class="btn btn-md btn-outline-info mx-2"><i class="bi bi-printer"></i></button></div></div></div></li>`
+        const name = String(element[1].file).split('/').pop(); 
+		  files += `<li class="my-1"><div class="container-fluid"><div class="row"><div class="col-1"><a href="/download?file=${encodeURIComponent(name)}">${name}</a></div><div class="col-1"><button class="btn btn-sm btn-outline-secondary mx-2" type="button"><i class="bi bi-pencil"></i></button><button data-bs-toggle="modal" data-bs-target="#print-confirm" class="btn btn-md btn-light mx-2" onclick="getFile(event.target.parentElement.parentElement.parentElement.children);"><i class="bi bi-printer"></i></button></div></div></div></li>`
       })
 
       files += '</ol></div>'
@@ -45,6 +45,10 @@ copyBtn.onclick = (event) => {
   if (clip){
     prompt('Uploaded Files:',clip);	
   }
+}
+
+const getFile = (file) => {
+  document.getElementsByClassName('print-text-content')[0].innerHTML = 'Print <strong>' + file[0].textContent +'</strong>?';
 }
 
 input.onchange = function(event) {
