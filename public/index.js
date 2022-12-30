@@ -27,7 +27,7 @@ printBtn.onclick = (event) => {
 
       Object.entries(response.data).forEach(element => {
         const name = String(element[1].file).split('/').pop();
-        files += `<li><div class="container-fluid"><div class="row"><div class="col-1"><a href="/download?file=${encodeURIComponent(name)}">${name}</a></div><div class="col-1"><button class="btn btn-sm btn-outline-success" type="button"><i class="bi bi-pencil"></i></button></div><div class="col-1"><button class="btn btn-sm btn-outline-warning"><i class="bi bi-printer"></i></button></div></div></div></li>`
+		  files += `<li class="my-1"><div class="container-fluid"><div class="row"><div class="col-1"><a href="/download?file=${encodeURIComponent(name)}">${name}</a></div><div class="col-1"><button class="btn btn-sm btn-outline-warning mx-2" type="button"><i class="bi bi-pencil"></i></button><button class="btn btn-md btn-outline-info mx-2"><i class="bi bi-printer"></i></button></div></div></div></li>`
       })
 
       files += '</ol></div>'
