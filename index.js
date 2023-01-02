@@ -60,13 +60,38 @@ app.get('/', (req, res) => {
 });
 
 app.get('/files', (req, res) => {
-  const dirTree = walkSync(__dirname+'/uploads/');
+  const dirTree = walkSync(__dirname+'/'+UPLOAD_PATH);
   
   if(dirTree.length){
-    return res.send(JSON.stringify(walkSync(__dirname+'/uploads/')))
+    return res.send(JSON.stringify(walkSync(__dirname+'/'+UPLOAD_PATH)))
   }
   
   res.status(204).send({})
+
+});
+
+app.get('/info/:file', (req, res) => {
+
+  let fileInfo = req.params.file
+
+  if(isEncoded(fileInfo)){
+    fileInfo = decodeURIComponent(fileInfo)
+  }
+
+  const {size, ctime, mtime} = fs.statSync(__dirname+'/'+UPLOAD_PATH+fileInfo)
+
+  res.send({
+    "name": fileInfo,
+    "size": size,
+    "createdAt": ctime,
+    "modifiedAt": mtime
+  })
+});
+
+app.get('/info/', (req, res) => {
+
+  
+  res.status(200).send({})
 
 });
 
