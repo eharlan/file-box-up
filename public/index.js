@@ -27,7 +27,24 @@ printBtn.onclick = (event) => {
 
       Object.entries(response.data).forEach(element => {
         const name = String(element[1].file).split('/').pop(); 
-		  files += `<li class="my-1"><div class="container-fluid"><div class="row"><div class="col-1"><a href="/download?file=${encodeURIComponent(name)}">${name}</a></div><div class="col-1"><button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-secondary mx-2" type="button"><i class="bi bi-pencil"></i></button><button data-bs-toggle="modal" data-bs-target="#print-confirm" class="btn btn-md btn-light mx-2" onclick="getFileName(event.target, 'print-text-content');"><i class="bi bi-printer"></i></button></div></div></div></li>`
+        files += `
+        <li class="my-1">
+          <div class="container-fluid">
+            <div class="row"><div class="col-1">
+          <a href="/download?file=${encodeURIComponent(name)}">${name}</a>
+          </div>
+          <div class="col-1">
+          <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-secondary mx-2" type="button">
+          <i class="bi bi-pencil"></i>
+          </button>
+          <button data-bs-toggle="modal" data-bs-target="#print-confirm" class="btn btn-md btn-light mx-2" onclick="getFileName(event.target, 'print-text-content');">
+          <i class="bi bi-printer"></i>
+          </button>
+          </div>
+          </div>
+          </div>
+          </li>
+          `
       })
 
       files += '</ol></div>'
@@ -48,7 +65,7 @@ copyBtn.onclick = (event) => {
 }
 
 const getFileInfo = (file) => {
-  const name = file.parentElement.parentElement.parentElement.children[0].textContent;
+  const name = String(file.parentElement.parentElement.parentElement.children[0].textContent).trim();
 
   axios({
     method: 'get',
