@@ -72,15 +72,15 @@ app.get('/files', (req, res) => {
 
 app.get('/info/:file', (req, res) => {
 
-  let fileInfo = req.params.file
+  let fileInfo = String(req.params.file).trim();
 
-  if(isEncoded(fileInfo)){
-    fileInfo = decodeURIComponent(fileInfo)
-  }
+//  if(isEncoded(fileInfo)){
+//    fileInfo = decodeURIComponent(fileInfo)
+//  }
 
   const {size, ctime, mtime} = fs.statSync(__dirname+'/'+UPLOAD_PATH+fileInfo)
 
-  res.send({
+  res.status(200).send({
     "name": fileInfo,
     "size": size,
     "createdAt": ctime,
@@ -88,11 +88,12 @@ app.get('/info/:file', (req, res) => {
   })
 });
 
-app.get('/info/', (req, res) => {
+app.delete('/delete/:file', (req, res) => {
+  let file = String(req.params.file).trim();
 
-  
-  res.status(200).send({})
+  fs.unlinkSync(__dirname+'/'+UPLOAD_PATH+file);
 
+  res.status(200).send({});
 });
 
 app.get('/download', function(req, res){

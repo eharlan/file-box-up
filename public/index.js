@@ -7,12 +7,12 @@ const bar = document.querySelector('.progress');
 const barProgress = document.querySelector('.progress-bar');
 const alertBox = document.querySelector('.alert-success');
 
+let currentFile = '';
+
 let selectedFiles = null;
 let clip = '';
 
-
-printBtn.onclick = (event) => {
-  event.preventDefault();
+const renderFiles = () => {
 
   axios({
     method: 'get',
@@ -56,6 +56,11 @@ printBtn.onclick = (event) => {
     })
 }
 
+printBtn.onclick = (event) => {
+  event.preventDefault();
+  renderFiles();
+}
+
 copyBtn.onclick = (event) => {
   event.preventDefault();
 
@@ -90,6 +95,8 @@ const getFileName = (file, target) => {
 
   const fileEl = file.parentElement.parentElement.parentElement.children;
   document.getElementsByClassName(target)[0].innerHTML = leadText + fileEl[0].textContent;
+
+  currentFile = fileEl[0].textContent.trim();
 }
 
 input.onchange = function(event) {
@@ -106,6 +113,23 @@ input.onchange = function(event) {
 
 }
 
+const deleteFile = () => {
+
+  axios({
+    method: 'DELETE',
+    url: '/delete/'+currentFile
+  })
+    .then(function(response){
+      const modalEl = document.getElementById('delete-confirm');
+      const modal = bootstrap.Modal.getInstance(modalEl).hide()
+      
+      renderFiles();
+    })
+    .catch(function(error){
+      console.log('Info error: '+error)
+    })
+
+}
 
 function formSubmit(event){
   event.preventDefault();
