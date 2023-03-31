@@ -30,11 +30,11 @@ const renderFiles = () => {
         files += `
         <li class="my-1">
           <div class="container-fluid">
-            <div class="row"><div class="col-1">
+            <div class="row align-items-start"><div class="col-md-3 col-sm-auto">
           <a href="/download?file=${encodeURIComponent(name)}">${name}</a>
           </div>
-          <div class="col-1">
-          <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-secondary mx-2" type="button">
+          <div class="col-sm-9 align-self-start">
+          <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-secondary mr-2" type="button">
           <i class="bi bi-pencil"></i>
           </button>
           <button data-bs-toggle="modal" data-bs-target="#print-confirm" class="btn btn-md btn-light mx-2" onclick="getFileName(event.target, 'print-text-content');">
