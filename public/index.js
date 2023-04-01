@@ -134,6 +134,10 @@ const deleteFile = () => {
 function formSubmit(event){
   event.preventDefault();
 
+ if(!selectedFiles){
+    return false;
+ }
+
   if(alertBox.classList.contains('show')){
     alertBox.classList.toggle('show');
     alertBox.classList.toggle('d-none');
