@@ -23,31 +23,37 @@ const renderFiles = () => {
         return false;
       }
 
-      let files = '<div><ol id="file-list">';
+      let files = `<table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Date Created</th>
+        </tr>
+      </thead>
+      <tbody>`;
 
-      Object.entries(response.data).forEach(element => {
+      Object.entries(response.data).forEach((element, index) => {
+        console.log(element)
         const name = String(element[1].file).split('/').pop(); 
         files += `
-        <li class="my-1">
-          <div class="container-fluid">
-            <div class="row align-items-start"><div class="col-md-3 col-sm-auto">
-          <a href="/download?file=${encodeURIComponent(name)}">${name}</a>
-          </div>
-          <div class="col-sm-9 align-self-start">
-          <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-secondary mr-2" type="button">
-          <i class="bi bi-pencil"></i>
-          </button>
-          <button data-bs-toggle="modal" data-bs-target="#print-confirm" class="btn btn-md btn-light mx-2" onclick="getFileName(event.target, 'print-text-content');">
-          <i class="bi bi-printer"></i>
-          </button>
-          </div>
-          </div>
-          </div>
-          </li>
+          <tr>
+            <th scope="row">
+            ${index+1}
+            </th>
+            <td>
+            <a href="/download?file=${encodeURIComponent(name)}">${name}</a>
+            </td>
+            <td>${new Date(element[1].stats.ctime).toUTCString()}
+            <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-primary" type="button">
+            <i class="bi bi-pencil"></i>
+            </button>
+            </td>
+          </tr>
           `
       })
 
-      files += '</ol></div>'
+      files += `</tbody></table>`
       printFiles.innerHTML = files;
 
     })
