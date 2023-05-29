@@ -12,6 +12,16 @@ let currentFile = '';
 let selectedFiles = null;
 let clip = '';
 
+const yyyymmdd = (date) => {
+  const now = new Date(date);
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const mm = m < 10 ? '0' + m : m;
+  const dd = d < 10 ? '0' + d : d;
+  return '' + y + mm + dd;
+}
+
 const renderFiles = () => {
 
   axios({
@@ -23,7 +33,8 @@ const renderFiles = () => {
         return false;
       }
 
-      let files = `<table class="table">
+
+      let files = `<table class="table sortable">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -34,7 +45,14 @@ const renderFiles = () => {
       <tbody>`;
 
       Object.entries(response.data).forEach((element, index) => {
-        console.log(element)
+        const ctime = new Date(element[1].stats.ctime);
+        const options = {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        };
+        const timeString = ctime.toLocaleString('en-US', options);
+        
         const name = String(element[1].file).split('/').pop(); 
         files += `
           <tr>
@@ -44,9 +62,11 @@ const renderFiles = () => {
             <td>
             <a href="/download?file=${encodeURIComponent(name)}">${name}</a>
             </td>
-            <td>${new Date(element[1].stats.ctime).toUTCString()}
+            <td data-sort="${yyyymmdd(ctime)}">${ctime.toUTCString()
+              .replace(/(\d{2})\s(\D{3})/, "$2 $1")
+              .replace(/(\d{2}:\d{2}:\d{2}).*/, timeString)}
             <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-primary" type="button">
-            <i class="bi bi-pencil"></i>
+            <i class="bi bi-info-circle"></i>
             </button>
             </td>
           </tr>
