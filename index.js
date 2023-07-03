@@ -20,7 +20,8 @@ const walkSync = (dir, filelist = []) => {
       filelist.push(odir);
     } else {
       filelist.push({
-        file: dirFile
+        file: dirFile,
+        stats: dirent
       });
     }
   }
