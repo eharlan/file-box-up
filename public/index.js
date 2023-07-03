@@ -34,11 +34,8 @@ const renderFiles = () => {
           <a href="/download?file=${encodeURIComponent(name)}">${name}</a>
           </div>
           <div class="col-sm-9 align-self-start">
-          <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-outline-secondary mr-2" type="button">
+          <button onclick="getFileName(event.target, 'file-text-content');getFileInfo(event.target);" data-bs-toggle="modal" data-bs-target="#file-info" class="btn btn-sm btn-primaary-secondary mr-2" type="button">
           <i class="bi bi-pencil"></i>
-          </button>
-          <button data-bs-toggle="modal" data-bs-target="#print-confirm" class="btn btn-md btn-light mx-2" onclick="getFileName(event.target, 'print-text-content');">
-          <i class="bi bi-printer"></i>
           </button>
           </div>
           </div>
