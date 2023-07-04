@@ -1,6 +1,6 @@
 {
   "name": "printer-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Local network printing API",
   "main": "index.js",
   "scripts": {
