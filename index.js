@@ -1,7 +1,7 @@
 const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
-const bodyParser = require('body-parser')
+let busboy = require('connect-busboy')
 const multer = require('multer');
 const morgan = require('morgan');
 const path = require('path')
@@ -28,20 +28,7 @@ const walkSync = (dir, filelist = []) => {
   return filelist;
 }
 
-const UPLOAD_PATH = 'uploads/';
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, `./${UPLOAD_PATH}`)
-  },
-  filename: function (req, file, cb) {
-    var filename = file.originalname;
-    var fileExtension = filename.split(".")[1];
-
-    return cb(null, filename);
-  }
-});
-
-const upload = multer({ storage: storage })
+const UPLOAD_PATH = process.env.UPLOAD_DIR || '/uploads';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -49,7 +36,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.options('*', cors());
 app.use(express.static(__dirname + '/public'))
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(busboy()); 
 app.use(morgan('tiny'));
 
 const isEncoded = (str) => {
@@ -108,16 +95,64 @@ app.get('/download', function(req, res){
   res.download(file);
 });
 
-app.post(`/${UPLOAD_PATH.replace('/','')}`, upload.array('files', 100), (req, res) => {
-//  morgan.log('Got body:', req.body, 'files:', req.files);
-  res.send(req.files, 200);
-}, (error, req, res, next) => {
-  res.status(400).send({error: error.message})
-});
+// app.post(`/${UPLOAD_PATH.replace('/','')}`, upload.array('files', 100), (req, res) => {
+// //  morgan.log('Got body:', req.body, 'files:', req.files);
+//   res.send(req.files, 200);
+// }, (error, req, res, next) => {
+//   res.status(400).send({error: error.message})
+// });
+
+const uploadFile = (req, filePath) => {
+  return new Promise((resolve, reject) => {
+   const stream = fs.createWriteStream(filePath);
+   // With the open - event, data will start being written
+   // from the request to the stream's destination path
+   stream.on('open', () => {
+    console.log('Stream open ...  0.00%');
+    req.pipe(stream);
+   });
+ 
+   // Drain is fired whenever a data chunk is written.
+   // When that happens, print how much data has been written yet.
+   stream.on('drain', () => {
+    const written = parseInt(stream.bytesWritten);
+    const total = parseInt(req.headers['content-length']);
+    const pWritten = ((written / total) * 100).toFixed(2);
+    console.log(`Processing  ...  ${pWritten}% done`);
+   });
+ 
+   // When the stream is finished, print a final message
+   // Also, resolve the location of the file to calling function
+   stream.on('close', () => {
+    console.log('Processing  ...  100%');
+    resolve(filePath);
+   });
+    // If something goes wrong, reject the primise
+   stream.on('error', err => {
+    console.error(err);
+    reject(err);
+   });
+  });
+ };
+ 
+ // Add a route to accept incoming post requests for the fileupload.
+ // Also, attach two callback functions to handle the response.
+ app.post(`${UPLOAD_PATH}`, (req, res) => {
+  let fstream;
+  req.pipe(req.busboy);
+  req.busboy.on('file', function (fieldname, file, filename) {
+      console.log("Uploading: " + filename); 
+      fstream = fs.createWriteStream(path.join(`/${UPLOAD_PATH.replace('/','')}`, filename));
+      file.pipe(fstream);
+      fstream.on('close', function () {
+          console.log('File Uploaded!')
+      });
+  })
+ });
 
 app.listen(port, () => {
   if(!fs.existsSync(UPLOAD_PATH)){
     fs.mkdirSync(UPLOAD_PATH)  
   }
-  console.log(`Printer API listening on port ${port}\nUPLOAD_PATH: ${UPLOAD_PATH}`)
+  console.log(`File Box API listening on port ${port}\nUPLOAD_PATH: ${UPLOAD_PATH}`)
 })
